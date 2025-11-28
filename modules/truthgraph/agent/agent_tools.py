@@ -14,6 +14,7 @@ from truthgraph.comparison_engine import ComparisonEngine
 from truthgraph.hallucination_detector import HallucinationDetector
 from truthgraph.bias_analyzer import BiasAnalyzer
 from truthgraph.data_sources.wikipedia import WikipediaClient
+from truthgraph.x402.client import X402Client
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +38,7 @@ class AgentTools:
         self.hallucination_detector = HallucinationDetector(publish_to_dkg=True, enable_attestations=True)
         self.bias_analyzer = BiasAnalyzer(publish_to_dkg=True, enable_attestations=True)
         self.wikipedia_client = WikipediaClient()
+        self.x402_client = X402Client() # Initialize payment client
         
         # Registry of callable tools
         self.tools: Dict[str, Callable] = {}
@@ -103,6 +105,20 @@ class AgentTools:
                 "required": ["query"]
             }
         )
+        
+        # 5. Pay and Fetch (x402)
+        self._register(
+            name="pay_and_fetch",
+            description="Fetch a resource from a URL, automatically handling any payment requirements (x402/HTTP 402). Use this for premium data sources.",
+            func=self._pay_and_fetch,
+            parameters={
+                "type": "object",
+                "properties": {
+                    "url": {"type": "string", "description": "URL to fetch"}
+                },
+                "required": ["url"]
+            }
+        )
 
     def _register(self, name: str, description: str, func: Callable, parameters: Dict[str, Any]):
         """Helper to register a tool"""
@@ -164,6 +180,15 @@ class AgentTools:
             return f"Found article '{article.get('title')}': {article.get('summary')[:500]}..."
         except Exception as e:
             return f"Error searching web: {str(e)}"
+
+    async def _pay_and_fetch(self, url: str) -> str:
+        """Tool implementation for x402 payment fetch"""
+        try:
+            # Use GET by default
+            result = await self.x402_client.request("GET", url)
+            return json.dumps(result, default=str)
+        except Exception as e:
+            return f"Error paying/fetching resource: {str(e)}"
 
     def get_tool_definitions(self) -> List[Dict[str, Any]]:
         """Get definitions in format suitable for LLM function calling"""
