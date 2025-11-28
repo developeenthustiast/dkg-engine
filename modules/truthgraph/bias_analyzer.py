@@ -3,6 +3,28 @@ Bias Analyzer with Enterprise Features
 Analyzes text for political and ideological bias
 """
 
+import logging
+from typing import Dict, List, Optional
+
+from truthgraph.exceptions import ProcessingException, ValidationException
+from truthgraph.validators import BiasRequest, BiasResult, BiasLeaning
+from truthgraph.utils.cache import SimpleCache
+
+logger = logging.getLogger(__name__)
+
+
+class BiasAnalyzer:
+    """
+    Enterprise-grade bias analyzer
+    """
+    
+    def __init__(self):
+        self.cache = SimpleCache()
+        
+        self.left_keywords = {
+            'progressive', 'social justice', 'equality', 'regulation',
+            'climate change', 'universal healthcare', 'labor unions'
+        }
         
         self.right_keywords = {
             'conservative', 'traditional', 'free market', 'deregulation',
@@ -63,7 +85,8 @@ Analyzes text for political and ideological bias
                 bias_score = min(1.0, right_count / 10)
             elif left_count > right_count:
                 leaning = BiasLeaning.CENTER_LEFT
-                bias_score = min(0.6, left_count / 15)
+            
+            return result_dict    bias_score = min(0.6, left_count / 15)
             elif right_count > left_count:
                 leaning = BiasLeaning.CENTER_RIGHT
                 bias_score = min(0.6, right_count / 15)
