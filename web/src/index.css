@@ -2,37 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #0a0a0a;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #0a0a0a 0%, #111827 100%);
+@layer base {
+  :root {
+    --bg-primary: #030014;
+    --bg-secondary: #0f0c29;
+    --text-primary: #ffffff;
+    --text-secondary: #94a3b8;
+  }
+  
+  body {
+    @apply bg-[#030014] text-white antialiased selection:bg-blue-500/30;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
 }
 
 @layer components {
-  .glass {
-    @apply bg-white/5 backdrop-blur-xl border border-white/10;
+  .glass-card {
+    @apply bg-white/[0.03] backdrop-blur-md border border-white/[0.05] shadow-xl;
   }
   
-  .btn-primary {
-    @apply bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl;
+  .glass-input {
+    @apply bg-white/[0.03] border border-white/[0.1] focus:border-blue-500/50 focus:bg-white/[0.05] transition-all duration-300 outline-none;
   }
   
-  .card {
-    @apply glass rounded-xl p-6 shadow-2xl;
+  .btn-gradient {
+    @apply bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white shadow-lg shadow-blue-500/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98];
   }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Background Gradients */
+.bg-grid-white {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(255 255 255 / 0.05)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e");
 }
