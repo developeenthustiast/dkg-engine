@@ -24,7 +24,7 @@ class ArticleSource(BaseModel):
     text: str = Field(..., min_length=1, max_length=1_000_000)
     citations: List[str] = Field(default_factory=list, max_items=1000)
     timestamp: datetime
-    content_hash: str = Field(..., regex=r'^sha256:[a-f0-9]{64}$')
+    content_hash: str = Field(..., pattern=r'^sha256:[a-f0-9]{64}$')
     
     @validator('text')
     def sanitize_text(cls, v):
