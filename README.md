@@ -65,6 +65,41 @@ This project was developed for the **OriginTrail DKG Global Hackathon 2025**.
     python examples/3_run_agent.py
     ```
 
+## 🌐 Web Interface (NEW!)
+
+For a visual, real-time experience, use our web interface:
+
+### Quick Start (Two Terminals Required):
+
+**Terminal 1 - Backend API:**
+```bash
+# Windows
+start-backend.bat
+
+# Mac/Linux
+cd backend && pip install -r requirements.txt && python main.py
+```
+
+**Terminal 2 - Frontend:**
+```bash
+# Windows
+start-frontend.bat
+
+# Mac/Linux
+cd web && npm install && npm run dev
+```
+
+Then open: **http://localhost:5173**
+
+### Features:
+- 🎨 Modern dark-themed UI with glass morphism
+- ⚡ Real-time agent thought process visualization
+- 💬 Interactive agent console
+- 📊 Color-coded message types (System, Assistant, Tools)
+- 🚀 Built with React + Vite + Tailwind CSS
+
+See `web/README.md` for detailed documentation.
+
 ## 📚 Documentation
 
 -   [**Architecture**](docs/ARCHITECTURE.md): Deep dive into the Agent-Knowledge-Trust triad.
