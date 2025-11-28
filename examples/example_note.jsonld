@@ -1,0 +1,26 @@
+{
+    "@context": "https://schema.org",
+    "@type": "Review",
+    "itemReviewed": {
+        "@type": "Claim",
+        "text": "The earth is flat."
+    },
+    "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "1",
+        "bestRating": "5",
+        "worstRating": "1"
+    },
+    "author": {
+        "@type": "Organization",
+        "name": "TruthGraph Autonomous Agent",
+        "identifier": "did:dkg:otp:2043/0x123..."
+    },
+    "reviewBody": "Hallucination Detected. Multiple sources confirm the earth is an oblate spheroid.",
+    "datePublished": "2025-11-28T12:00:00Z",
+    "verification": {
+        "@type": "DigitalDocument",
+        "identifier": "0xabc123...",
+        "description": "NeuroWeb Attestation Hash"
+    }
+}

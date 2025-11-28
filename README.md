@@ -21,12 +21,18 @@ This project was developed for the **OriginTrail DKG Global Hackathon 2025**.
 -   **🛡️ On-Chain Trust**: Every piece of knowledge is cryptographically attested on the NeuroWeb parachain. If the data changes, the hash won't match.
 -   **💰 Knowledge Economy**: I've implemented the **x402** protocol, allowing the agent to autonomously pay for premium data and monetize its own high-quality insights.
 
-## 🏆 Hackathon Tracks
+## 🏆 Hackathon Challenge: Decentralized Community Notes
 
-TruthGraph addresses multiple tracks:
--   **Grokpedia vs Wikipedia**: Real-time verification of AI knowledge.
--   **Decentralized Community Notes**: Automated, verifiable fact-checking.
--   **Social Graph Reputation**: Trust scores for information sources.
+**This project is submitted for the "Decentralized Community Notes" challenge.**
+
+### How It Addresses the Challenge
+-   **AI-Powered Fact-Checking**: Extends the concept of community notes by using an Autonomous Agent to instantly verify claims against the DKG and external sources.
+-   **Verifiable Provenance**: Every "Note" (Analysis Result) is published as a DKG Knowledge Asset with an on-chain NeuroWeb attestation.
+-   **Structured Knowledge**: We use strict JSON-LD schemas to ensure our notes are interoperable and machine-readable.
+
+### Bonus Features
+-   **✅ x402 Micropayments Implemented**: We have fully implemented the **x402 (HTTP 402)** protocol. The agent can autonomously pay for premium data or monetize its own fact-checking reports. (See `modules/truthgraph/x402/` and `examples/3_run_agent.py`).
+-   **✅ Tokenomics Ready**: The system is designed to support staking/slashing based on the Trust Score calculated by the agent.
 
 ## ⚡ Quick Start
 
@@ -64,6 +70,7 @@ TruthGraph addresses multiple tracks:
 -   [**Architecture**](docs/ARCHITECTURE.md): Deep dive into the Agent-Knowledge-Trust triad.
 -   [**Setup Guide**](docs/SETUP.md): Detailed installation and configuration instructions.
 -   [**User Guide**](docs/USER_GUIDE.md): How to use the CLI and Agent tools.
+-   [**JSON-LD Example**](examples/example_note.jsonld): See a sample Knowledge Asset structure.
 -   [**API Reference**](docs/API.md): Technical reference for developers.
 
 ## 🧪 Testing
