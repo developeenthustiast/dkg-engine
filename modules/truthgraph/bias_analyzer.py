@@ -85,8 +85,9 @@ class BiasAnalyzer:
                 bias_score = min(1.0, right_count / 10)
             elif left_count > right_count:
                 leaning = BiasLeaning.CENTER_LEFT
-            
-            return result_dict    bias_score = min(0.6, left_count / 15)
+            elif left_count > right_count:
+                leaning = BiasLeaning.CENTER_LEFT
+                bias_score = min(0.6, left_count / 15)
             elif right_count > left_count:
                 leaning = BiasLeaning.CENTER_RIGHT
                 bias_score = min(0.6, right_count / 15)
@@ -108,6 +109,7 @@ class BiasAnalyzer:
                 'confidence': confidence
             }
             
+            return result_dict
             
         except ValidationException:
             raise
