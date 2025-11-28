@@ -13,11 +13,12 @@ from typing import List, Dict, Any
 import json
 import logging
 
-# Add parent directory to path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Add parent directory to path - FIXED PATH
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'modules'))
 
-from truthgraph.agent.agent_core import AgentCore
-from truthgraph.dkg_client import DKGQueryClient
+from modules.truthgraph.agent.agent_core import AgentCore
+from modules.truthgraph.dkg_client import DKGQueryClient
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
