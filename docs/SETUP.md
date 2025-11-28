@@ -1,11 +1,15 @@
 # Setup Guide
 
+Getting TruthGraph up and running is straightforward. I've designed the system to be modular, so you can run the agent with or without the full blockchain stack (using mocks for testing).
+
 ## Prerequisites
 
-Before running TruthGraph, ensure you have the following installed:
+You'll need a standard Python/Node environment.
+
+> **💡 Pro Tip**: If you don't have a local DKG node running, the system will default to using the public testnet endpoints or mocks where appropriate.
 
 1.  **Python 3.9+**: [Download Python](https://www.python.org/downloads/)
-2.  **Node.js 16+**: [Download Node.js](https://nodejs.org/) (Required for DKG Node)
+2.  **Node.js 16+**: [Download Node.js](https://nodejs.org/) (Required if running a local DKG Node)
 3.  **Git**: [Download Git](https://git-scm.com/)
 
 ## Installation

@@ -1,18 +1,25 @@
 # TruthGraph 🕸️🧠🛡️
 
 > **The Trust Layer for the AI Era.**
-> *Winner of the OriginTrail DKG Global Hackathon 2025 (Target)*
 
-TruthGraph is a decentralized system that integrates **AI Agents**, **Knowledge Graphs**, and **Blockchain Trust** to fight hallucinations and misinformation.
+I built **TruthGraph** to address a critical problem in the age of Generative AI: **Hallucinations and Misinformation**.
+
+As AI agents become more autonomous, they need a way to verify information and establish trust without relying on centralized authorities. TruthGraph provides this by integrating three powerful technologies:
+
+1.  **Autonomous AI Agents** (The Brain)
+2.  **Decentralized Knowledge Graphs** (The Memory)
+3.  **Blockchain Trust Layers** (The Anchor)
+
+This project was developed for the **OriginTrail DKG Global Hackathon 2025**.
 
 ![Architecture](docs/images/architecture_diagram.png)
 
 ## 🚀 Key Features
 
--   **🧠 Autonomous AI Agent**: A "Brain" that independently verifies claims, detects hallucinations, and analyzes bias.
--   **🕸️ Knowledge Layer (DKG)**: Publishes analysis results as structured, interoperable Knowledge Assets on the OriginTrail DKG.
--   **🛡️ Trust Layer (NeuroWeb)**: Secures every analysis with an on-chain cryptographic attestation, ensuring provenance and immutability.
--   **💰 x402 Economy**: Built-in micropayments allow the agent to pay for premium data and monetize its own insights.
+-   **🧠 Autonomous Verification**: My agent doesn't just chat; it actively verifies claims, detects hallucinations, and cross-references data against the DKG.
+-   **🕸️ structured Knowledge**: Instead of ephemeral text, analysis results are published as permanent, interoperable Knowledge Assets on the OriginTrail DKG.
+-   **🛡️ On-Chain Trust**: Every piece of knowledge is cryptographically attested on the NeuroWeb parachain. If the data changes, the hash won't match.
+-   **💰 Knowledge Economy**: I've implemented the **x402** protocol, allowing the agent to autonomously pay for premium data and monetize its own high-quality insights.
 
 ## 🏆 Hackathon Tracks
 
