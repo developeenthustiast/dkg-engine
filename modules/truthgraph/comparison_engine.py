@@ -4,43 +4,6 @@ Compares claims and publishes results to OriginTrail DKG
 """
 
 import logging
-from typing import Dict, List, Optional
-from datetime import datetime
-
-from truthgraph.config import config
-from truthgraph.exceptions import ComparisonFailedException, ValidationException
-from truthgraph.validators import ComparisonRequest, ComparisonResult, ArticleSource
-from truthgraph.data_sources.wikipedia import WikipediaClient
-from truthgraph.utils.cache import SimpleCache
-from truthgraph.dkg_publisher import DKGPublisher
-
-logger = logging.getLogger(__name__)
-
-
-class ComparisonEngine:
-    """
-    Enterprise-grade comparison engine with DKG integration
-    Compares claims using multiple data sources and publishes to DKG
-    """
-    
-    def __init__(self, publish_to_dkg: bool = True):
-        self.wikipedia_client = WikipediaClient()
-        self.cache = SimpleCache(default_ttl=7200)  # 2 hour cache
-        self.publish_to_dkg = publish_to_dkg
-        
-        # Initialize DKG publisher
-        if self.publish_to_dkg:
-            self.dkg_publisher = DKGPublisher()
-            logger.info("Comparison engine initialized with DKG publishing enabled")
-        else:
-            self.dkg_publisher = None
-            logger.info("Comparison engine initialized without DKG publishing")
-    
-    async def compare(
-        self,
-        claim1: str,
-        claim2: str,
-        context: Optional[str] = None,
         publish: bool = True
     ) -> Dict:
         """
@@ -124,29 +87,6 @@ class ComparisonEngine:
             
             # Validate result
             try:
-                result = ComparisonResult(**result_dict)
-                result_dict = result.dict()
-            except Exception as e:
-                logger.error(f"Result validation failed: {e}")
-                raise ComparisonFailedException(f"Invalid comparison result: {str(e)}", cause=e)
-            
-            # Publish to DKG if enabled
-            if self.publish_to_dkg and publish and self.dkg_publisher:
-                try:
-                    dkg_result = await self.dkg_publisher.publish_comparison(result_dict)
-                    result_dict['dkg'] = dkg_result
-                    logger.info(f"Published comparison to DKG - UAL: {dkg_result['ual']}")
-                except Exception as e:
-                    logger.warning(f"Failed to publish to DKG (continuing): {e}")
-                    result_dict['dkg'] = {'error': str(e)}
-            
-            # Cache result
-            self.cache.set(cache_key, result_dict)
-            
-            logger.info(f"Comparison complete: similarity={similarity:.2f}, conflict={conflict}")
-            return result_dict
-            
-        except ValidationException:
             raise
         except Exception as e:
             logger.error(f"Comparison failed: {str(e)}")
