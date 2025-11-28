@@ -34,7 +34,7 @@ class AgentTools:
         # Initialize underlying components
         self.dkg_client = DKGQueryClient()
         self.dkg_publisher = DKGPublisher()
-        self.comparison_engine = ComparisonEngine(publish_to_dkg=True, enable_attestations=True)
+        self.comparison_engine = ComparisonEngine()
         self.hallucination_detector = HallucinationDetector(publish_to_dkg=True, enable_attestations=True)
         self.bias_analyzer = BiasAnalyzer(publish_to_dkg=True, enable_attestations=True)
         self.wikipedia_client = WikipediaClient()
