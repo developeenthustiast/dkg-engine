@@ -1,0 +1,16 @@
+requests
+numpy
+pandas
+scikit-learn
+openai
+anthropic
+pytest
+pytest-cov
+pytest-asyncio
+black
+flake8
+mypy
+bandit
+safety
+pydantic>=2.0.0
+python-dotenv
