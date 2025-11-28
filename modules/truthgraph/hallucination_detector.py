@@ -5,6 +5,25 @@ Detects AI hallucinations and unsupported claims
 
 import logging
 import re
+from typing import Dict, Any, Optional, List
+
+from truthgraph.exceptions import HallucinationDetectionFailedException, ValidationException
+from truthgraph.validators import HallucinationRequest, HallucinationResult
+from truthgraph.data_sources.wikipedia import WikipediaClient
+from truthgraph.utils.cache import SimpleCache
+
+logger = logging.getLogger(__name__)
+
+
+class HallucinationDetector:
+    """
+    Enterprise-grade hallucination detector
+    """
+    
+    def __init__(self):
+        self.wikipedia_client = WikipediaClient()
+        self.cache = SimpleCache()
+
     async def detect(
         self,
         text: str,
