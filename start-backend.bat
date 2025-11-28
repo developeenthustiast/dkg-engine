@@ -2,9 +2,11 @@
 echo Starting TruthGraph Backend API Server...
 echo.
 
-cd backend
 echo Installing dependencies...
-pip install -q fastapi uvicorn websockets python-multipart
+cd ..
+pip install -q -r requirements.txt
+cd backend
+pip install -q -r requirements.txt
 
 echo.
 echo Starting server on http://localhost:8000
