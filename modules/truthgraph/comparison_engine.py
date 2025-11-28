@@ -1,6 +1,6 @@
 """
-Comparison Engine with Enterprise Features
-Compares claims and detects conflicts with validation and error handling
+Comparison Engine with Enterprise Features and DKG Integration
+Compares claims and publishes results to OriginTrail DKG
 """
 
 import logging
@@ -12,25 +12,36 @@ from truthgraph.exceptions import ComparisonFailedException, ValidationException
 from truthgraph.validators import ComparisonRequest, ComparisonResult, ArticleSource
 from truthgraph.data_sources.wikipedia import WikipediaClient
 from truthgraph.utils.cache import SimpleCache
+from truthgraph.dkg_publisher import DKGPublisher
 
 logger = logging.getLogger(__name__)
 
 
 class ComparisonEngine:
     """
-    Enterprise-grade comparison engine
-    Compares claims using multiple data sources and ML techniques
+    Enterprise-grade comparison engine with DKG integration
+    Compares claims using multiple data sources and publishes to DKG
     """
     
-    def __init__(self):
+    def __init__(self, publish_to_dkg: bool = True):
         self.wikipedia_client = WikipediaClient()
         self.cache = SimpleCache(default_ttl=7200)  # 2 hour cache
+        self.publish_to_dkg = publish_to_dkg
+        
+        # Initialize DKG publisher
+        if self.publish_to_dkg:
+            self.dkg_publisher = DKGPublisher()
+            logger.info("Comparison engine initialized with DKG publishing enabled")
+        else:
+            self.dkg_publisher = None
+            logger.info("Comparison engine initialized without DKG publishing")
     
     async def compare(
         self,
         claim1: str,
         claim2: str,
-        context: Optional[str] = None
+        context: Optional[str] = None,
+        publish: bool = True
     ) -> Dict:
         """
         Compare two claims and detect conflicts
@@ -39,9 +50,10 @@ class ComparisonEngine:
             claim1: First claim to compare
             claim2: Second claim to compare
             context: Optional context for comparison
+            publish: Whether to publish to DKG (default: True)
         
         Returns:
-            ComparisonResult dictionary with similarity score and analysis
+            ComparisonResult dictionary with similarity score, analysis, and UAL if published
         
         Raises:
             ComparisonFailedException: If comparison fails
@@ -76,7 +88,7 @@ class ComparisonEngine:
             topics2 = self._extract_topics(claim2)
             
             # Fetch supporting evidence
-            sources: List[ArticleSource] = []
+            sources:List[ArticleSource] = []
             for topic in set(topics1 + topics2[:3]):  # Limit to avoid too many API calls
                 try:
                     article = await self.wikipedia_client.fetch_article(topic)
@@ -101,6 +113,8 @@ class ComparisonEngine:
             
             # Build result
             result_dict = {
+                'claim1': claim1,
+                'claim2': claim2,
                 'similarity_score': similarity,
                 'conflict': conflict,
                 'explanation': explanation,
@@ -115,6 +129,16 @@ class ComparisonEngine:
             except Exception as e:
                 logger.error(f"Result validation failed: {e}")
                 raise ComparisonFailedException(f"Invalid comparison result: {str(e)}", cause=e)
+            
+            # Publish to DKG if enabled
+            if self.publish_to_dkg and publish and self.dkg_publisher:
+                try:
+                    dkg_result = await self.dkg_publisher.publish_comparison(result_dict)
+                    result_dict['dkg'] = dkg_result
+                    logger.info(f"Published comparison to DKG - UAL: {dkg_result['ual']}")
+                except Exception as e:
+                    logger.warning(f"Failed to publish to DKG (continuing): {e}")
+                    result_dict['dkg'] = {'error': str(e)}
             
             # Cache result
             self.cache.set(cache_key, result_dict)

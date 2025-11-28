@@ -1,0 +1,4 @@
+# DKG SDK for Python
+dkg>=8.0.0
+
+# Add to existing requirements
