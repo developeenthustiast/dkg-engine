@@ -99,7 +99,7 @@ class BiasResult(BaseModel):
 class DKGPublishRequest(BaseModel):
     """Request to publish to DKG"""
     data: Dict[str, Any]
-    schema_type: str = Field(..., regex=r'^[a-z_]+$')
+    schema_type: str = Field(..., pattern=r'^[a-z_]+$')
     
     @validator('schema_type')
     def validate_schema_type(cls, v):
@@ -111,7 +111,7 @@ class DKGPublishRequest(BaseModel):
 
 class MCPToolRequest(BaseModel):
     """Generic MCP tool request"""
-    tool_name: str = Field(..., min_length=1, max_length=100, regex=r'^[a-z_]+$')
+    tool_name: str = Field(..., min_length=1, max_length=100, pattern=r'^[a-z_]+$')
     parameters: Dict[str, Any]
     
     @validator('parameters')
