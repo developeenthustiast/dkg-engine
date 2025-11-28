@@ -402,7 +402,7 @@ Every verification creates a W3C-compliant Knowledge Asset:
 
 ## 🎬 Demo Video
 
-Watch our 5-minute demo: [Link to YouTube/Vimeo]
+Watch our demo: [https://youtu.be/rdLdJONubxA
 
 **Demo Highlights:**
 - Autonomous agent reasoning through complex claims
