@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const API_URL = 'http://localhost:8000'
 
@@ -17,7 +17,6 @@ function App() {
   const [agentStatus, setAgentStatus] = useState<'idle' | 'running'>('idle')
 
   useEffect(() => {
-    // Check agent status on mount
     fetch(`${API_URL}/health`)
       .then(res => res.json())
       .then(data => console.log('API Status:', data))
@@ -55,152 +54,162 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
+    <div className="app">
+      {/* Hero Section */}
+      <div className="hero-section">
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-12 text-center"
+          transition={{ duration: 0.6 }}
+          className="hero-content"
         >
-          <h1 className="text-6xl font-bold bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent mb-4">
-            TruthGraph
-          </h1>
-          <p className="text-gray-400 text-xl">The Trust Layer for the AI Era</p>
-          <div className="mt-4 flex items-center justify-center gap-4">
-            <span className={`px-4 py-2 rounded-full text-sm ${agentStatus === 'running' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400'}`}>
-              {agentStatus === 'running' ? '🤖 Agent Running...' : '✓ Agent Ready'}
-            </span>
+          <div className="logo-container">
+            <div className="logo-icon">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                <path d="M24 4L40 14V34L24 44L8 34V14Z" stroke="url(#grad1)" strokeWidth="2" fill="none" />
+                <defs>
+                  <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#3B82F6" />
+                    <stop offset="100%" stopColor="#8B5CF6" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+            <h1 className="hero-title">TruthGraph</h1>
+          </div>
+          <p className="hero-subtitle">The Trust Layer for the AI Era</p>
+          <div className="status-badge">
+            <span className={`status-dot ${agentStatus === 'running' ? 'running' : 'idle'}`}></span>
+            {agentStatus === 'running' ? 'Agent Running' : 'Ready'}
           </div>
         </motion.div>
+      </div>
 
-        {/* Main Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Agent Console */}
+      {/* Main Content */}
+      <div className="container">
+        <div className="content-grid">
+          {/* Left Column - Agent Console */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="card"
+            transition={{ delay: 0.2 }}
+            className="console-card"
           >
-            <h2 className="text-2xl font-bold text-white mb-6">🧠 Agent Console</h2>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Agent Goal
-                </label>
-                <textarea
-                  value={goal}
-                  onChange={(e) => setGoal(e.target.value)}
-                  placeholder="e.g., Check if 'The earth is flat' is a hallucination"
-                  className="w-full bg-white/5 border border-white/10 rounded-lg p-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                  rows={4}
-                  disabled={loading}
-                />
-              </div>
-
-              <button
-                onClick={runAgent}
-                disabled={loading || !goal.trim()}
-                className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                    Running Agent...
-                  </span>
-                ) : (
-                  '▶ Run Agent'
-                )}
-              </button>
+            <div className="card-header">
+              <h2>🧠 Agent Console</h2>
+              <p>Enter your verification goal</p>
             </div>
 
-            {/* Result Display */}
+            <div className="input-group">
+              <label>What would you like to verify?</label>
+              <textarea
+                value={goal}
+                onChange={(e) => setGoal(e.target.value)}
+                placeholder="Example: Check if 'The earth is flat' is a hallucination"
+                disabled={loading}
+                rows={5}
+                className="input-field"
+              />
+            </div>
+
+            <button
+              onClick={runAgent}
+              disabled={loading || !goal.trim()}
+              className="btn-primary"
+            >
+              {loading ? (
+                <>
+                  <svg className="spinner" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  Running...
+                </>
+              ) : (
+                <>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                  </svg>
+                  Run Agent
+                </>
+              )}
+            </button>
+
             {result && (
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="mt-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="result-box"
               >
-                <h3 className="text-sm font-semibold text-blue-400 mb-2">Final Result:</h3>
-                <p className="text-white">{result}</p>
+                <div className="result-header">✓ Final Result</div>
+                <p>{result}</p>
               </motion.div>
             )}
           </motion.div>
 
-          {/* Agent Thoughts */}
+          {/* Right Column - Agent Thoughts */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="card"
+            transition={{ delay: 0.3 }}
+            className="thoughts-card"
           >
-            <h2 className="text-2xl font-bold text-white mb-6">💭 Agent Thoughts</h2>
+            <div className="card-header">
+              <h2>💭 Agent Reasoning</h2>
+              <p>Live thought process</p>
+            </div>
 
-            <div className="space-y-3 max-h-[500px] overflow-y-auto">
-              {history.length === 0 ? (
-                <p className="text-gray-500 text-center py-8">
-                  Run the agent to see the thought process...
-                </p>
-              ) : (
-                history.map((msg, idx) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.1 }}
-                    className={`p-3 rounded-lg ${msg.role === 'system' ? 'bg-purple-500/10 border-l-4 border-purple-500' :
-                        msg.role === 'assistant' ? 'bg-blue-500/10 border-l-4 border-blue-500' :
-                          msg.role === 'tool' ? 'bg-green-500/10 border-l-4 border-green-500' :
-                            'bg-gray-500/10 border-l-4 border-gray-500'
-                      }`}
-                  >
-                    <div className="text-xs font-semibold text-gray-400 mb-1 uppercase">{msg.role}</div>
-                    <div className="text-sm text-gray-200 whitespace-pre-wrap">{msg.content}</div>
-                  </motion.div>
-                ))
-              )}
+            <div className="thoughts-container">
+              <AnimatePresence>
+                {history.length === 0 ? (
+                  <div className="empty-state">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                    <p>Run the agent to see its reasoning...</p>
+                  </div>
+                ) : (
+                  history.map((msg, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.05 }}
+                      className={`thought-item ${msg.role}`}
+                    >
+                      <div className="thought-role">{msg.role}</div>
+                      <div className="thought-content">{msg.content}</div>
+                    </motion.div>
+                  ))
+                )}
+              </AnimatePresence>
             </div>
           </motion.div>
         </div>
 
-        {/* Info Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="card text-center"
-          >
-            <div className="text-4xl mb-3">🕸️</div>
-            <h3 className="text-lg font-semibold text-white mb-2">Knowledge Layer</h3>
-            <p className="text-sm text-gray-400">OriginTrail DKG</p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="card text-center"
-          >
-            <div className="text-4xl mb-3">🛡️</div>
-            <h3 className="text-lg font-semibold text-white mb-2">Trust Layer</h3>
-            <p className="text-sm text-gray-400">NeuroWeb Parachain</p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="card text-center"
-          >
-            <div className="text-4xl mb-3">💰</div>
-            <h3 className="text-lg font-semibold text-white mb-2">x402 Economy</h3>
-            <p className="text-sm text-gray-400">Micropayments Ready</p>
-          </motion.div>
-        </div>
+        {/* Feature Cards */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="features-grid"
+        >
+          <div className="feature-card">
+            <div className="feature-icon">🕸️</div>
+            <h3>Knowledge Layer</h3>
+            <p>OriginTrail DKG for decentralized storage</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon">🛡️</div>
+            <h3>Trust Layer</h3>
+            <p>NeuroWeb blockchain verification</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon">💰</div>
+            <h3>x402 Economy</h3>
+            <p>Autonomous micropayments</p>
+          </div>
+        </motion.div>
       </div>
     </div>
   )

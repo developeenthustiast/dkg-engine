@@ -1,10 +1,36 @@
 """
-Comparison Engine with Enterprise Features and DKG Integration
-Compares claims and publishes results to OriginTrail DKG
+Comparison Engine with Enterprise Features
+Compares claims and detects conflicts with validation and error handling
 """
 
 import logging
-        publish: bool = True
+from typing import Dict, List, Optional
+from datetime import datetime
+
+from truthgraph.config import config
+from truthgraph.exceptions import ComparisonFailedException, ValidationException
+from truthgraph.validators import ComparisonRequest, ComparisonResult, ArticleSource
+from truthgraph.data_sources.wikipedia import WikipediaClient
+from truthgraph.utils.cache import SimpleCache
+
+logger = logging.getLogger(__name__)
+
+
+class ComparisonEngine:
+    """
+    Enterprise-grade comparison engine
+    Compares claims using multiple data sources and ML techniques
+    """
+    
+    def __init__(self):
+        self.wikipedia_client = WikipediaClient()
+        self.cache = SimpleCache(default_ttl=7200)  # 2 hour cache
+    
+    async def compare(
+        self,
+        claim1: str,
+        claim2: str,
+        context: Optional[str] = None
     ) -> Dict:
         """
         Compare two claims and detect conflicts
@@ -13,10 +39,9 @@ import logging
             claim1: First claim to compare
             claim2: Second claim to compare
             context: Optional context for comparison
-            publish: Whether to publish to DKG (default: True)
         
         Returns:
-            ComparisonResult dictionary with similarity score, analysis, and UAL if published
+            ComparisonResult dictionary with similarity score and analysis
         
         Raises:
             ComparisonFailedException: If comparison fails
@@ -51,7 +76,7 @@ import logging
             topics2 = self._extract_topics(claim2)
             
             # Fetch supporting evidence
-            sources:List[ArticleSource] = []
+            sources: List[ArticleSource] = []
             for topic in set(topics1 + topics2[:3]):  # Limit to avoid too many API calls
                 try:
                     article = await self.wikipedia_client.fetch_article(topic)
@@ -76,8 +101,6 @@ import logging
             
             # Build result
             result_dict = {
-                'claim1': claim1,
-                'claim2': claim2,
                 'similarity_score': similarity,
                 'conflict': conflict,
                 'explanation': explanation,
@@ -87,6 +110,19 @@ import logging
             
             # Validate result
             try:
+                result = ComparisonResult(**result_dict)
+                result_dict = result.dict()
+            except Exception as e:
+                logger.error(f"Result validation failed: {e}")
+                raise ComparisonFailedException(f"Invalid comparison result: {str(e)}", cause=e)
+            
+            # Cache result
+            self.cache.set(cache_key, result_dict)
+            
+            logger.info(f"Comparison complete: similarity={similarity:.2f}, conflict={conflict}")
+            return result_dict
+            
+        except ValidationException:
             raise
         except Exception as e:
             logger.error(f"Comparison failed: {str(e)}")
