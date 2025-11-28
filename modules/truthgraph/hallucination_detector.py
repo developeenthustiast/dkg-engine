@@ -5,6 +5,15 @@ Detects AI hallucinations and unsupported claims
 
 import logging
 import re
+    async def detect(
+        self,
+        text: str,
+        context: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Detect hallucinations in text
+        
+        Args:
             text: Text to analyze
             context: Optional context for verification
         
@@ -66,7 +75,7 @@ import re
                 'evidence': evidence
             }
             
-            
+            return result_dict
         except ValidationException:
             raise
         except Exception as e:
