@@ -6,7 +6,7 @@ Enterprise-grade publishing to OriginTrail DKG with validation and error handlin
 import logging
 import hashlib
 import uuid
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 from datetime import datetime
 
 from truthgraph.knowledge_assets import (
