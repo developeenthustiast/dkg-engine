@@ -5,31 +5,6 @@ Detects AI hallucinations and unsupported claims
 
 import logging
 import re
-from typing import Dict, List, Any
-from truthgraph.config import config
-from truthgraph.exceptions import HallucinationDetectionFailedException, ValidationException
-from truthgraph.validators import HallucinationRequest, HallucinationResult
-from truthgraph.data_sources.wikipedia import WikipediaClient
-from truthgraph.utils.cache import SimpleCache
-
-logger = logging.getLogger(__name__)
-
-
-class HallucinationDetector:
-    """
-    Enterprise-grade hallucination detector
-    Detects unsupported or fabricated claims in text
-    """
-    
-    def __init__(self):
-        self.wikipedia_client = WikipediaClient()
-        self.cache = SimpleCache(default_ttl=3600)
-    
-    async def detect(self, text: str, context: str = None) -> Dict:
-        """
-        Detect potential hallucinations in text
-        
-        Args:
             text: Text to analyze
             context: Optional context for verification
         
@@ -91,22 +66,6 @@ class HallucinationDetector:
                 'evidence': evidence
             }
             
-            # Validate result
-            try:
-                result = HallucinationResult(**result_dict)
-                result_dict = result.dict()
-            except Exception as e:
-                logger.error(f"Result validation failed: {e}")
-                raise HallucinationDetectionFailedException(
-                    f"Invalid hallucination result: {str(e)}",
-                    cause=e
-                )
-            
-            # Cache result
-            self.cache.set(cache_key, result_dict)
-            
-            logger.info(f"Hallucination detection complete: score={score:.2f}, is_hallucination={is_hallucination}")
-            return result_dict
             
         except ValidationException:
             raise

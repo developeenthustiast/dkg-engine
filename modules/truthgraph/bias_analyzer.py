@@ -3,30 +3,6 @@ Bias Analyzer with Enterprise Features
 Analyzes text for political and ideological bias
 """
 
-import logging
-from typing import Dict
-from truthgraph.config import config
-from truthgraph.exceptions import ProcessingException, ValidationException
-from truthgraph.validators import BiasRequest, BiasResult, BiasLeaning
-from truthgraph.utils.cache import SimpleCache
-
-logger = logging.getLogger(__name__)
-
-
-class BiasAnalyzer:
-    """
-    Enterprise-grade bias analyzer
-    Detects political and ideological bias in text
-    """
-    
-    def __init__(self):
-        self.cache = SimpleCache(default_ttl=3600)
-        
-        # Bias keywords (simplified - in production use ML models)
-        self.left_keywords = {
-            'progressive', 'liberal', 'equality', 'social justice',
-            'diversity', 'regulation', 'welfare', 'climate action'
-        }
         
         self.right_keywords = {
             'conservative', 'traditional', 'free market', 'deregulation',
@@ -109,19 +85,6 @@ class BiasAnalyzer:
                 'confidence': confidence
             }
             
-            # Validate result
-            try:
-                result = BiasResult(**result_dict)
-                result_dict = result.dict()
-            except Exception as e:
-                logger.error(f"Result validation failed: {e}")
-                raise ProcessingException(f"Invalid bias result: {str(e)}", cause=e)
-            
-            # Cache result
-            self.cache.set(cache_key, result_dict)
-            
-            logger.info(f"Bias analysis complete: leaning={leaning.value}, score={bias_score:.2f}")
-            return result_dict
             
         except ValidationException:
             raise
