@@ -116,8 +116,8 @@ Built for the **DKG Global Hackathon 2025**, TruthGraph demonstrates the power o
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/yourusername/dkg-engine.git
-cd dkg-engine
+git clone https://github.com/developeenthustiast/dkg-engine/tree/truthgraph-integration/modules/truthgraph.git
+cd truthgraph
 ```
 
 ### 2. Backend Setup
@@ -402,7 +402,8 @@ Every verification creates a W3C-compliant Knowledge Asset:
 
 ## 🎬 Demo Video
 
-Watch our demo: [https://youtu.be/rdLdJONubxA
+Watch our demo: [https://youtu.be/rdLdJONubxA]
+Demo Website: [https://truthgraph-hamzasprojects.vercel.app/]
 
 **Demo Highlights:**
 - Autonomous agent reasoning through complex claims
